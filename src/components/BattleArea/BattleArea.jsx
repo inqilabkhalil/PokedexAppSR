@@ -3,77 +3,47 @@ import Pokedeck from '../Pokedeck/Pokedeck';
 import './BattleArea.css';
 
 const pokemonData = [
-  { "id": 4, "name": "Charmander", "type": "fire", "base_experience": 62 },
-  { "id": 7, "name": "Squirtle", "type": "water", "base_experience": 63 },
-  { "id": 11, "name": "Metapod", "type": "bug", "base_experience": 72 },
-  { "id": 12, "name": "Butterfree", "type": "flying", "base_experience": 178 },
-  { "id": 25, "name": "Pikachu", "type": "electric", "base_experience": 112 },
-  { "id": 39, "name": "Jigglypuff", "type": "normal", "base_experience": 95 },
-  { "id": 94, "name": "Gengar", "type": "poison", "base_experience": 225 },
-  { "id": 133, "name": "Eevee", "type": "normal", "base_experience": 65 }
+  { id: 4, name: "Charmander", type: "fire", base_experience: 62 },
+  { id: 7, name: "Squirtle", type: "water", base_experience: 63 },
+  { id: 11, name: "Metapod", type: "bug", base_experience: 72 },
+  { id: 12, name: "Butterfree", type: "flying", base_experience: 178 },
+  { id: 25, name: "Pikachu", type: "electric", base_experience: 112 },
+  { id: 39, name: "Jigglypuff", type: "normal", base_experience: 95 },
+  { id: 94, name: "Gengar", type: "poison", base_experience: 225 },
+  { id: 133, name: "Eevee", type: "normal", base_experience: 65 }
 ];
 
-const shuffleArray = (array) => {
-  const newArr = [...array];
-  for (let i = newArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-  return newArr;
-};
+let team1 = [...pokemonData];
+let team2 = [];
 
-let t1 = [];
-let t2 = [];
-let exp1 = 0;
-let exp2 = 0;
+while (team2.length < 4) {
+  let randomIndex = Math.floor(Math.random() * team1.length);
 
-try {
-  const shuffled = shuffleArray(pokemonData);
+  let selected = team1[randomIndex];
 
-  const promises = shuffled.map(p => 
-    fetch(`https://pokeapi.co/api/v2/pokemon/${p.id}`)
-      .then(res => res.json())
-      .then(data => ({
-        ...p,
-        img: data.sprites?.other?.['official-artwork']?.front_default || p.img
-      }))
-  );
+  // team2-ye elave et
+  team2.push(selected);
 
-  const formattedPokemon = await Promise.all(promises);
-
-  t1 = formattedPokemon.slice(0, 4);
-  t2 = formattedPokemon.slice(4, 8);
-
-  exp1 = t1.reduce((acc, curr) => acc + curr.base_experience, 0);
-  exp2 = t2.reduce((acc, curr) => acc + curr.base_experience, 0);
-} catch (error) {
-  console.error("Failed to fetch pokemon images", error);
-  const shuffled = shuffleArray(pokemonData);
-  t1 = shuffled.slice(0, 4);
-  t2 = shuffled.slice(4, 8);
-  exp1 = t1.reduce((acc, curr) => acc + curr.base_experience, 0);
-  exp2 = t2.reduce((acc, curr) => acc + curr.base_experience, 0);
+  // team1-den sil (spread ile yeni array)
+  team1 = [
+    ...team1.slice(0, randomIndex),
+    ...team1.slice(randomIndex + 1)
+  ];
 }
 
-const BattleArea = () => {
-  const handlePlayAgain = () => {
-    window.location.reload();
-  };
+let exp1 = team1.reduce((sum, p) => sum + p.base_experience, 0);
+let exp2 = team2.reduce((sum, p) => sum + p.base_experience, 0);
 
+const BattleArea = () => {
   return (
     <div className="BattleArea">
-      {t1.length > 0 ? (
-        <>
-          <Pokedeck pokemon={t1} exp={exp1} isWinner={exp1 > exp2} />
-          <div className="BattleArea-vs">
-            <h1>VS</h1>
-            <button className="BattleArea-btn" onClick={handlePlayAgain}>Play Again</button>
-          </div>
-          <Pokedeck pokemon={t2} exp={exp2} isWinner={exp2 > exp1} />
-        </>
-      ) : (
-        <h2>Pokemon yüklənə bilmədi. Xahiş edirəm səhifəni yeniləyin!</h2>
-      )}
+      <Pokedeck pokemon={team1} exp={exp1} isWinner={exp1 > exp2} />
+
+      <div className="BattleArea-vs">
+        <h1>VS</h1>
+      </div>
+
+      <Pokedeck pokemon={team2} exp={exp2} isWinner={exp2 > exp1} />
     </div>
   );
 };
