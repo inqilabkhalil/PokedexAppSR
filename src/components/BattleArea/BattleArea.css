@@ -1,0 +1,50 @@
+.BattleArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+.BattleArea-vs {
+  text-align: center;
+  margin: 30px 0;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+.BattleArea-vs h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  font-style: italic;
+  letter-spacing: 5px;
+}
+.BattleArea-btn {
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+  box-shadow: 0 10px 20px rgba(255, 65, 108, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.BattleArea-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 25px rgba(255, 65, 108, 0.6);
+}
+.BattleArea-btn:active {
+  transform: translateY(2px) scale(0.95);
+}
